@@ -8,5 +8,5 @@ type IParse interface {
 	GetDocument(url string) (*goquery.Document, error)
 
 	//传入需要解析的文档对象
-	ParseHtml(*goquery.Document) (interface{}, error)
+	ParseHtml(doc *goquery.Document)
 }

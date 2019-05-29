@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 )
 
@@ -16,13 +17,15 @@ var mySqlDB *sqlx.DB
 func (d *Db) InitDb() error {
 	username := beego.AppConfig.String("prod::mysql.username")
 	password := beego.AppConfig.String("prod::mysql.password")
-	logs.Debug("===mysql username=:%s,password=:%s", username, password)
+	ip := beego.AppConfig.String("prod::mysql.ip")
+	port := beego.AppConfig.String("prod::mysql.port")
+	logs.Debug("===mysql ip =: %s port =: %s username=:%s,password=:%s", ip, port, username, password)
 	if username == "" || password == "" {
 		logs.Error("===================")
 		logs.Error("数据库初始化失败")
 		return errors.New("数据库初始化失败")
 	}
-	mysqlUrl := fmt.Sprintf("%s:%s@tcp(106.13.60.183:3306)/star_child?charset=utf8", username, password)
+	mysqlUrl := fmt.Sprintf("%s:%s@tcp(%s:%s)/go_spider?charset=utf8", username, password, ip, port)
 	logs.Debug("===mysqlUrl is ==:%s", mysqlUrl)
 	db, err := sqlx.Open("mysql", mysqlUrl)
 	if err != nil {
